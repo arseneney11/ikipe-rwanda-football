@@ -1,0 +1,64 @@
+name: IKIPI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Automated Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        run: cd backend && npm install
+
+      - name: Run tests
+        run: cd backend && npm test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-coverage
+          path: backend/coverage/
+
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Trigger Render Backend Deployment
+        run: |
+          curl -X POST "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}"
+          echo "Backend deployment triggered!"
+
+      - name: Trigger Render Frontend Deployment
+        run: |
+          curl -X POST "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}"
+          echo "Frontend deployment triggered!"
+
+      - name: Wait for deployment
+        run: sleep 90
+
+      - name: Smoke test live API
+        run: |
+          echo "Testing live backend..."
+          curl -f "${{ secrets.RENDER_API_URL }}/health"
+          echo ""
+          echo "✅ Live API is healthy!"
