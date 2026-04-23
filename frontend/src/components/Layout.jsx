@@ -48,7 +48,7 @@ export default function Layout() {
         }}>
           {!collapsed && (
             <div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 28, color: 'var(--accent)', letterSpacing: 2 }}>IKIPI</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 28, color: 'var(--accent)', letterSpacing: 2 }}>IKIPE</div>
               <div style={{ fontSize: 10, color: 'var(--text3)', letterSpacing: 1.5, textTransform: 'uppercase' }}>Rwanda Football</div>
             </div>
           )}
