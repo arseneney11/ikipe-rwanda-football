@@ -141,7 +141,7 @@ export default function Layout() {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           fontSize: 12, color: 'var(--text3)',
         }}>
-          <span>© 2025 IKIPI — Rwanda Football Intelligence Platform</span>
+          <span>© 2025 IKIPE — Rwanda Football Intelligence Platform</span>
           <span>Powered by <span style={{ color: 'var(--accent)' }}>Node.js + React</span></span>
         </footer>
       </div>
